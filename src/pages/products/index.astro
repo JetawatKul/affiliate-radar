@@ -9,6 +9,8 @@ interface Product {
   reviewedDate: string; // YYYY-MM-DD วันที่เจตรวจสอบว่าสินค้ายังขายอยู่
   affiliateUrl: string;
   note: string;
+  imageUrl?: string; // รูปสินค้า (ถ่ายเองหรือภาพหน้าจอจากร้าน) — ไม่บังคับ
+  price?: number; // ราคาล่าสุดตอนตรวจ (บาท) — ไม่บังคับ เพราะราคาเปลี่ยนบ่อย
 }
 
 const products = productsData as Product[];
@@ -31,12 +33,18 @@ const products = productsData as Product[];
     {
       products.map((product) => (
         <li class="product-card">
-          <h2>{product.name}</h2>
-          <p>{product.note}</p>
-          <p class="reviewed-date">ตรวจสอบล่าสุด: {product.reviewedDate}</p>
-          <AffiliateLink href={product.affiliateUrl} label={product.id}>
-            ดูสินค้า
-          </AffiliateLink>
+          {product.imageUrl && (
+            <img src={product.imageUrl} alt={product.name} loading="lazy" width="320" height="320" />
+          )}
+          <div class="product-card-body">
+            <h2>{product.name}</h2>
+            {product.price != null && <p class="price">ราคาที่ตรวจล่าสุด: {product.price.toLocaleString('th-TH')} บาท</p>}
+            <p>{product.note}</p>
+            <p class="reviewed-date">ตรวจสอบล่าสุด: {product.reviewedDate}</p>
+            <AffiliateLink href={product.affiliateUrl} label={product.id}>
+              ดูสินค้า
+            </AffiliateLink>
+          </div>
         </li>
       ))
     }
@@ -51,9 +59,29 @@ const products = productsData as Product[];
     gap: 1rem;
   }
   .product-card {
+    display: flex;
+    gap: 1rem;
     border: 1px solid #eee;
     border-radius: 8px;
     padding: 1.25rem;
+  }
+  .product-card img {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  .product-card-body {
+    min-width: 0;
+  }
+  .product-card h2 {
+    margin: 0 0 0.35rem;
+    font-size: 1.05rem;
+  }
+  .price {
+    font-weight: 700;
+    margin: 0 0 0.35rem;
   }
   .reviewed-date {
     font-size: 0.8rem;
