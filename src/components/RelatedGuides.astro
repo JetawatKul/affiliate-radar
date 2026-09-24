@@ -1,0 +1,45 @@
+---
+// ลิงก์ภายในไปบทความอื่นในกลุ่มเดียวกัน (S4) — ช่วย SEO และพาผู้อ่านไปต่อในเส้นทางเดียวกัน
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { guideGroups } from '../config/site';
+
+interface Props {
+  currentId: string;
+  group: CollectionEntry<'guides'>['data']['group'];
+}
+
+const { currentId, group } = Astro.props;
+
+const relatedGuides = (await getCollection('guides', ({ data }) => !data.draft && data.group === group))
+  .filter((guide) => guide.id !== currentId)
+  .slice(0, 3);
+---
+
+{
+  relatedGuides.length > 0 && (
+    <nav class="related-guides" aria-label="บทความที่เกี่ยวข้อง">
+      <h2>บทความที่เกี่ยวข้องในหมวด {guideGroups[group]}</h2>
+      <ul>
+        {relatedGuides.map((guide) => (
+          <li>
+            <a href={`/guides/${guide.id}`}>{guide.data.title}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
+<style>
+  .related-guides {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+  }
+  .related-guides h2 {
+    font-size: 1rem;
+  }
+  .related-guides ul {
+    padding-left: 1.2rem;
+  }
+</style>

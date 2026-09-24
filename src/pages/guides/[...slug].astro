@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import AdSlot from '../../components/AdSlot.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
 import { guideGroups } from '../../config/site';
 
 export async function getStaticPaths() {
@@ -33,6 +34,7 @@ const articleSchema = {
     <Content />
   </article>
   <AdSlot slotId="article-end" />
+  <RelatedGuides currentId={guide.id} group={guide.data.group} />
 </BaseLayout>
 
 <style>
