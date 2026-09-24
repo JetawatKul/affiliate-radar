@@ -1,0 +1,90 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import CookieConsent from '../components/CookieConsent.astro';
+import { siteConfig, monetizationConfig, isProductionBuild } from '../config/site';
+
+interface Props {
+  title: string;
+  description: string;
+  noindex?: boolean;
+}
+
+const { title, description, noindex = false } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const pageTitle = `${title} | ${siteConfig.name}`;
+const gaId = monetizationConfig.analytics.ga4MeasurementId;
+const adsensePublisherId = monetizationConfig.adsense.publisherId;
+const loadAds = isProductionBuild && monetizationConfig.adsEnabled && adsensePublisherId;
+const loadAnalytics = isProductionBuild && gaId;
+---
+
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonicalURL} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={new URL(siteConfig.defaultOgImage, Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style is:global>
+      :root {
+        --color-text: #1a1a1a;
+        --color-bg: #ffffff;
+        --color-accent: #ee4d2d;
+        --max-width: 44rem;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: 'Noto Sans Thai', system-ui, sans-serif;
+        color: var(--color-text);
+        background: var(--color-bg);
+        line-height: 1.7;
+      }
+      main {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: 1rem 1.25rem 3rem;
+      }
+      a {
+        color: var(--color-accent);
+      }
+      .ad-slot {
+        display: block;
+        min-height: 100px;
+        margin: 1.5rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <CookieConsent
+      gaMeasurementId={loadAnalytics ? gaId : ''}
+      adsensePublisherId={loadAds ? adsensePublisherId : ''}
+    />
+  </body>
+</html>

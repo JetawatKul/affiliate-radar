@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { guideGroups } from '../../config/site';
+import type { GuideGroupKey } from '../../config/site';
+
+const allGuides = await getCollection('guides', ({ data }) => !data.draft);
+const groupKeys = Object.keys(guideGroups) as GuideGroupKey[];
+---
+
+<BaseLayout title="บทความทั้งหมด" description="รวมบทความสอนทำ Affiliate ตั้งแต่เริ่มต้นสมัครจนถึงทำคอนเทนต์แรก">
+  <h1>บทความทั้งหมด</h1>
+
+  {
+    allGuides.length === 0 && (
+      <p>ยังไม่มีบทความเผยแพร่ในขณะนี้ กำลังทยอยเขียนตามแผน sprint</p>
+    )
+  }
+
+  {
+    groupKeys.map((groupKey) => {
+      const groupGuides = allGuides.filter((g) => g.data.group === groupKey);
+      if (groupGuides.length === 0) return null;
+      return (
+        <section>
+          <h2>{guideGroups[groupKey]}</h2>
+          <ul>
+            {groupGuides.map((guide) => (
+              <li>
+                <a href={`/guides/${guide.id}`}>{guide.data.title}</a>
+                <p>{guide.data.description}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      );
+    })
+  }
+</BaseLayout>

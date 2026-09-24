@@ -1,0 +1,46 @@
+---
+import { siteConfig } from '../config/site';
+---
+
+<header class="site-header">
+  <a class="brand" href="/">{siteConfig.name}</a>
+  <nav>
+    <a href="/guides">บทความ</a>
+    <a href="/calculator">เครื่องคำนวณค่าคอม</a>
+    <a href="/products">สินค้าคัดมือ</a>
+    <a href="/about">เกี่ยวกับเรา</a>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #eee;
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+  .brand {
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+    color: var(--color-text);
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    font-size: 0.95rem;
+  }
+  nav a {
+    text-decoration: none;
+    color: var(--color-text);
+  }
+  nav a:hover {
+    color: var(--color-accent);
+  }
+</style>

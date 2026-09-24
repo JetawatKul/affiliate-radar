@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="เครื่องคำนวณค่าคอมมิชชัน"
+  description="กรอกราคาสินค้า อัตราค่าคอม และจำนวนออเดอร์ เพื่อประเมินรายได้ Affiliate คำนวณในเบราว์เซอร์ ไม่เก็บข้อมูล"
+>
+  <h1>เครื่องคำนวณค่าคอมมิชชัน</h1>
+  <p>กรอกตัวเลขด้านล่าง ระบบคำนวณในเบราว์เซอร์ของคุณเท่านั้น ไม่ส่งหรือเก็บข้อมูลที่ไหน</p>
+
+  <form id="commission-form" class="calc-form">
+    <label>
+      ราคาสินค้า (บาท)
+      <input type="number" name="price" min="0" step="0.01" inputmode="decimal" />
+    </label>
+    <label>
+      อัตราค่าคอม (%)
+      <input type="number" name="ratePercent" min="0" step="0.01" inputmode="decimal" />
+    </label>
+    <label>
+      จำนวนออเดอร์ต่อเดือน
+      <input type="number" name="orders" min="0" step="1" inputmode="numeric" />
+    </label>
+  </form>
+
+  <p class="result">
+    ค่าคอมมิชชันโดยประมาณ: <strong id="commission-result">ไม่ทราบ</strong>
+  </p>
+  <p class="disclaimer">ตัวเลขนี้เป็นการประมาณจากข้อมูลที่คุณกรอกเท่านั้น ไม่ใช่การรับประกันรายได้จริง</p>
+</BaseLayout>
+
+<script>
+  import { calculateCommission } from '../lib/commission';
+
+  const form = document.getElementById('commission-form') as HTMLFormElement;
+  const resultEl = document.getElementById('commission-result') as HTMLElement;
+
+  function parseField(name: string): number | null {
+    const value = (form.elements.namedItem(name) as HTMLInputElement)?.value;
+    if (value === '' || value == null) return null;
+    const num = Number(value);
+    return Number.isFinite(num) ? num : null;
+  }
+
+  function updateResult() {
+    const result = calculateCommission({
+      price: parseField('price'),
+      ratePercent: parseField('ratePercent'),
+      orders: parseField('orders'),
+    });
+
+    resultEl.textContent =
+      result === null
+        ? 'ไม่ทราบ'
+        : `${result.toLocaleString('th-TH', { maximumFractionDigits: 2 })} บาท/เดือน`;
+  }
+
+  form.addEventListener('input', updateResult);
+  updateResult();
+</script>
+
+<style>
+  .calc-form {
+    display: grid;
+    gap: 1rem;
+    max-width: 24rem;
+  }
+  .calc-form label {
+    display: grid;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+  }
+  .calc-form input {
+    padding: 0.6rem 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+  .result {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+  }
+  .disclaimer {
+    font-size: 0.8rem;
+    color: #777;
+  }
+</style>

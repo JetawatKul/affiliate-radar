@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const steps = [
+  {
+    title: '1. สมัคร',
+    description: 'สมัครเป็น Affiliate และตั้งค่าบัญชีให้พร้อมรับค่าคอมมิชชัน',
+    href: '/guides',
+  },
+  {
+    title: '2. เลือกสินค้า',
+    description: 'เลือกสินค้าที่เหมาะกับกลุ่มผู้ชมของคุณ และเข้าใจค่าคอมแต่ละหมวด',
+    href: '/guides',
+  },
+  {
+    title: '3. โพสต์แรก',
+    description: 'ทำคอนเทนต์ชิ้นแรกให้ถูกกติกา พร้อมเปิดเผยลิงก์ Affiliate อย่างถูกต้อง',
+    href: '/guides',
+  },
+];
+---
+
+<BaseLayout
+  title="เริ่มต้นทำ Affiliate จากศูนย์"
+  description="คู่มือเริ่มต้นทำ Affiliate สำหรับมือใหม่ เขียนจากประสบการณ์จริง พร้อมเครื่องคำนวณค่าคอมมิชชัน"
+>
+  <section>
+    <h1>เริ่มต้นทำ Affiliate จากศูนย์ ใน 3 ขั้นตอน</h1>
+    <p>คู่มือและเครื่องมือสำหรับมือใหม่ที่อยากหารายได้จากการทำ Affiliate เขียนจากประสบการณ์จริง ไม่ใช่เนื้อหาที่สรุปมาจากที่อื่น</p>
+  </section>
+
+  <section class="steps">
+    {
+      steps.map((step) => (
+        <a class="step-card" href={step.href}>
+          <h2>{step.title}</h2>
+          <p>{step.description}</p>
+        </a>
+      ))
+    }
+  </section>
+
+  <section>
+    <h2>เครื่องมือแนะนำ</h2>
+    <p>
+      ลองใช้ <a href="/calculator">เครื่องคำนวณค่าคอมมิชชัน</a> เพื่อประเมินรายได้ก่อนตัดสินใจโปรโมตสินค้า
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .steps {
+    display: grid;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .step-card {
+    display: block;
+    padding: 1.25rem;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    text-decoration: none;
+    color: inherit;
+  }
+  .step-card:hover {
+    border-color: var(--color-accent);
+  }
+  .step-card h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.1rem;
+  }
+  .step-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #555;
+  }
+</style>

@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AffiliateLink from '../../components/AffiliateLink.astro';
+import productsData from '../../data/products.json';
+
+interface Product {
+  id: string;
+  name: string;
+  reviewedDate: string; // YYYY-MM-DD วันที่เจตรวจสอบว่าสินค้ายังขายอยู่
+  affiliateUrl: string;
+  note: string;
+}
+
+const products = productsData as Product[];
+---
+
+<BaseLayout
+  title="สินค้าคัดมือ"
+  description="รวมสินค้าที่เจลองใช้และคัดมาเอง พร้อมวันที่ตรวจสอบล่าสุดและข้อความเปิดเผยลิงก์ Affiliate"
+>
+  <h1>สินค้าคัดมือ</h1>
+  <p>ทุกรายการเจทดลองใช้เองก่อนแนะนำ ไม่ใช่รายการที่สุ่มมาจากระบบ</p>
+
+  {
+    products.length === 0 && (
+      <p>ยังไม่มีสินค้าที่คัดไว้ในขณะนี้ (รอ Jay เพิ่มข้อมูลใน src/data/products.json ตาม ticket S3)</p>
+    )
+  }
+
+  <ul class="product-list">
+    {
+      products.map((product) => (
+        <li class="product-card">
+          <h2>{product.name}</h2>
+          <p>{product.note}</p>
+          <p class="reviewed-date">ตรวจสอบล่าสุด: {product.reviewedDate}</p>
+          <AffiliateLink href={product.affiliateUrl} label={product.id}>
+            ดูสินค้า
+          </AffiliateLink>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>
+
+<style>
+  .product-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .product-card {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+  .reviewed-date {
+    font-size: 0.8rem;
+    color: #777;
+  }
+</style>

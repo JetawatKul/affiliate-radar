@@ -1,0 +1,45 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import { guideGroups } from '../../config/site';
+
+export async function getStaticPaths() {
+  const guides = await getCollection('guides', ({ data }) => !data.draft);
+  return guides.map((guide) => ({
+    params: { slug: guide.id },
+    props: { guide },
+  }));
+}
+
+const { guide } = Astro.props;
+const { Content } = await render(guide);
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: guide.data.title,
+  description: guide.data.description,
+  datePublished: guide.data.pubDate.toISOString(),
+  dateModified: (guide.data.updatedDate ?? guide.data.pubDate).toISOString(),
+};
+---
+
+<BaseLayout title={guide.data.title} description={guide.data.description}>
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <p class="guide-group">{guideGroups[guide.data.group]}</p>
+  <h1>{guide.data.title}</h1>
+  <article>
+    <Content />
+  </article>
+  <AdSlot slotId="article-end" />
+</BaseLayout>
+
+<style>
+  .guide-group {
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+</style>

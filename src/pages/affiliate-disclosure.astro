@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../config/site';
+---
+
+<BaseLayout title="การเปิดเผยลิงก์ Affiliate" description={`นโยบายการเปิดเผยลิงก์ Affiliate ของ ${siteConfig.name}`}>
+  <h1>การเปิดเผยลิงก์ Affiliate</h1>
+  <p>
+    บทความและหน้าสินค้าบางส่วนบนเว็บนี้มีลิงก์ Affiliate ซึ่งหมายความว่าเราอาจได้รับค่าคอมมิชชันเมื่อคุณคลิกลิงก์แล้วสั่งซื้อสินค้า
+    โดยคุณไม่ต้องจ่ายเพิ่มแต่อย่างใด
+  </p>
+  <p>
+    เราเลือกแนะนำเฉพาะสินค้าที่ทดลองใช้จริง และคัดแยกความคิดเห็นส่วนตัวออกจากผลประโยชน์ที่ได้รับให้ชัดเจนที่สุด
+  </p>
+  <p>ลิงก์ Affiliate ทุกลิงก์บนเว็บนี้ใช้แอตทริบิวต์ rel="sponsored nofollow" ตามแนวทางของ Google</p>
+</BaseLayout>

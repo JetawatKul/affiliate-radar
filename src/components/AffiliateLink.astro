@@ -1,0 +1,48 @@
+---
+// ลิงก์ Affiliate ทุกลิงก์ในเว็บต้องผ่าน component นี้เท่านั้น (ดู AGENTS.md)
+// ทำ 3 อย่างเสมอ: rel="sponsored nofollow", ข้อความเปิดเผย, event GA4 แยกตามปุ่ม
+import { monetizationConfig } from '../config/site';
+
+interface Props {
+  href: string;
+  label: string; // ใช้เป็น GA4 event label เพื่อแยกคลิกตามปุ่ม
+  class?: string;
+}
+
+const { href, label, class: className } = Astro.props;
+const disabled = !monetizationConfig.affiliateEnabled;
+---
+
+{
+  disabled ? (
+    <span class:list={['affiliate-link', 'is-disabled', className]} title="ลิงก์ Affiliate ยังไม่เปิดใช้งาน">
+      <slot />
+    </span>
+  ) : (
+    <a
+      href={href}
+      rel="sponsored nofollow noopener"
+      target="_blank"
+      class:list={['affiliate-link', className]}
+      data-affiliate-label={label}
+      onclick={`window.trackAffiliateClick && window.trackAffiliateClick(${JSON.stringify(label)})`}
+    >
+      <slot />
+    </a>
+  )
+}
+<span class="affiliate-disclosure-note">(ลิงก์นี้เป็นลิงก์ Affiliate เจอาจได้ค่าคอมมิชชันเมื่อคุณสั่งซื้อ)</span>
+
+<style>
+  .affiliate-link.is-disabled {
+    color: #999;
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+  .affiliate-disclosure-note {
+    display: block;
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.15rem;
+  }
+</style>

@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../config/site';
+---
+
+<BaseLayout title="เกี่ยวกับเรา" description={`เกี่ยวกับ ${siteConfig.name} และทีมผู้เขียน`}>
+  <h1>เกี่ยวกับเรา</h1>
+  <p>
+    {siteConfig.name} เป็นเว็บคอนเทนต์สำหรับมือใหม่ที่อยากเริ่มทำ Affiliate เขียนจากประสบการณ์จริงของผู้เขียน
+    ไม่ใช่เนื้อหาที่สรุปมาจากที่อื่นหรือสร้างจำนวนมากด้วย AI
+  </p>
+  <p>
+    <em>เนื้อหาส่วนนี้รอ Jay เขียนรายละเอียดตัวตนและประสบการณ์จริงเพิ่มเติม (ticket S1/S2)</em>
+  </p>
+</BaseLayout>

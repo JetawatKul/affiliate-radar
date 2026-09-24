@@ -1,0 +1,141 @@
+---
+interface Props {
+  gaMeasurementId?: string;
+  adsensePublisherId?: string;
+}
+const { gaMeasurementId = '', adsensePublisherId = '' } = Astro.props;
+---
+
+<div id="cookie-consent" class="cookie-banner" hidden>
+  <p>
+    เว็บนี้ใช้คุกกี้เพื่อวัดผลการใช้งาน (Google Analytics) และแสดงโฆษณา อ่านรายละเอียดใน
+    <a href="/privacy">นโยบายความเป็นส่วนตัว</a>
+  </p>
+  <div class="actions">
+    <button id="cookie-decline" type="button">ปฏิเสธ</button>
+    <button id="cookie-accept" type="button">ยอมรับ</button>
+  </div>
+</div>
+
+<script define:vars={{ gaMeasurementId, adsensePublisherId }}>
+  const CONSENT_KEY = 'cookie-consent';
+
+  function loadAnalytics() {
+    if (!gaMeasurementId || document.querySelector('script[data-script="ga4"]')) return;
+    const script = document.createElement('script');
+    script.async = true;
+    script.dataset.script = 'ga4';
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`;
+    document.head.appendChild(script);
+
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function gtag() {
+      window.dataLayer.push(arguments);
+    };
+    window.gtag('js', new Date());
+    window.gtag('config', gaMeasurementId);
+  }
+
+  function loadAds() {
+    if (!adsensePublisherId || document.querySelector('script[data-script="adsense"]')) return;
+    const script = document.createElement('script');
+    script.async = true;
+    script.dataset.script = 'adsense';
+    script.crossOrigin = 'anonymous';
+    script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsensePublisherId}`;
+    document.head.appendChild(script);
+  }
+
+  function applyConsent(consent) {
+    if (consent === 'granted') {
+      loadAnalytics();
+      loadAds();
+    }
+  }
+
+  // เปิดใช้ได้จากทุกหน้าผ่าน window.trackAffiliateClick — ไม่ทำอะไรถ้ายังไม่ได้รับความยินยอม
+  window.trackAffiliateClick = function trackAffiliateClick(label) {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'affiliate_click', { link_label: label });
+    }
+  };
+
+  const banner = document.getElementById('cookie-consent');
+  const acceptBtn = document.getElementById('cookie-accept');
+  const declineBtn = document.getElementById('cookie-decline');
+
+  let storedConsent = null;
+  try {
+    storedConsent = localStorage.getItem(CONSENT_KEY);
+  } catch {
+    storedConsent = null;
+  }
+
+  if (storedConsent) {
+    applyConsent(storedConsent);
+  } else if (banner) {
+    banner.hidden = false;
+  }
+
+  acceptBtn?.addEventListener('click', () => {
+    try {
+      localStorage.setItem(CONSENT_KEY, 'granted');
+    } catch {
+      /* localStorage ไม่พร้อมใช้งาน ยังยอมให้โหลดสคริปต์ในเซสชันนี้ได้ */
+    }
+    applyConsent('granted');
+    if (banner) banner.hidden = true;
+  });
+
+  declineBtn?.addEventListener('click', () => {
+    try {
+      localStorage.setItem(CONSENT_KEY, 'denied');
+    } catch {
+      /* ไม่บันทึกได้ก็ปิด banner อย่างเดียว */
+    }
+    if (banner) banner.hidden = true;
+  });
+</script>
+
+<style>
+  .cookie-banner {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 0.85rem;
+  }
+  .cookie-banner a {
+    color: #ffd8cc;
+  }
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+  .actions button {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  #cookie-accept {
+    background: var(--color-accent, #ee4d2d);
+    color: #fff;
+  }
+  #cookie-decline {
+    background: transparent;
+    color: #fff;
+    border: 1px solid #666;
+  }
+</style>

@@ -1,0 +1,32 @@
+---
+// ช่องโฆษณา: จองความสูงไว้ก่อนเสมอเพื่อไม่ให้หน้ากระตุกตอนโฆษณาโหลด (CLS)
+// ไม่แสดงอะไรเลยถ้า adsEnabled = false หรือหน้านี้ถูกส่ง exclude เข้ามา (เช่นหน้านโยบาย, ติดต่อ, เกี่ยวกับเรา)
+import { monetizationConfig, isProductionBuild } from '../config/site';
+
+interface Props {
+  slotId: string;
+  minHeight?: string;
+  excluded?: boolean;
+}
+
+const { slotId, minHeight = '100px', excluded = false } = Astro.props;
+const shouldRender = !excluded && monetizationConfig.adsEnabled && isProductionBuild;
+---
+
+{
+  shouldRender && (
+    <div class="ad-slot" style={`min-height: ${minHeight}`} data-ad-slot={slotId}>
+      <ins
+        class="adsbygoogle"
+        style="display:block"
+        data-ad-client={monetizationConfig.adsense.publisherId}
+        data-ad-slot={slotId}
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      />
+      <script is:inline>
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  )
+}
