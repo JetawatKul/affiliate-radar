@@ -1,0 +1,61 @@
+---
+// ลิงก์ภายในแบบ breadcrumb: หน้าแรก > บทความ > ชื่อบทความ (S4)
+interface Crumb {
+  label: string;
+  href?: string; // ไม่ใส่ href ให้กับรายการสุดท้าย (หน้าปัจจุบัน)
+}
+
+interface Props {
+  items: Crumb[];
+}
+
+const { items } = Astro.props;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: items.map((item, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: item.label,
+    ...(item.href ? { item: new URL(item.href, Astro.site).toString() } : {}),
+  })),
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+<nav class="breadcrumbs" aria-label="breadcrumb">
+  <ol>
+    {
+      items.map((item, index) => (
+        <li>
+          {item.href ? <a href={item.href}>{item.label}</a> : <span aria-current="page">{item.label}</span>}
+          {index < items.length - 1 && <span class="sep">/</span>}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .breadcrumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    font-size: 0.8rem;
+    color: #777;
+  }
+  .breadcrumbs li {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .breadcrumbs a {
+    color: #777;
+  }
+  .sep {
+    margin-left: 0.4rem;
+  }
+</style>

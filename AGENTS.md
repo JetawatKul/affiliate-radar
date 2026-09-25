@@ -3,7 +3,7 @@
 ## Stack
 - Astro + TypeScript, content collections ใน src/content/guides
 - UI ภาษาไทย, mobile-first, ฟอนต์ไทยจาก Google Fonts พร้อม fallback
-- คำสั่ง: npm run build, npm run test, npm run lint ต้องผ่านก่อนเปิด PR
+- คำสั่ง: npm run build, npm run test, npm run lint, npm run check-links ต้องผ่านก่อนเปิด PR
 
 ## กติกาที่ห้ามละเมิด
 - ห้าม scraping หรือดึงข้อมูลจาก Shopee/TikTok/Lazada โดยอัตโนมัติ
@@ -16,6 +16,7 @@
 ## Definition of done
 - Lighthouse มือถือ: Performance และ SEO อย่างน้อย 90
 - ทุกหน้ามี title, meta description, canonical ไม่ซ้ำกัน
+- ไม่มีลิงก์ภายในที่เสีย (`npm run check-links` ผ่าน)
 - PR อธิบายสิ่งที่เปลี่ยนและวิธีทดสอบเป็นภาษาไทย
 
 ## Development (Astro CLI)

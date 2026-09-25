@@ -9,6 +9,9 @@ const year = new Date().getFullYear();
     <a href="/contact">ติดต่อ</a>
     <a href="/privacy">นโยบายความเป็นส่วนตัว</a>
     <a href="/affiliate-disclosure">การเปิดเผยลิงก์ Affiliate</a>
+    <button type="button" id="open-cookie-settings" class="link-button" onclick="window.openCookieSettings && window.openCookieSettings()">
+      ตั้งค่าคุกกี้
+    </button>
   </nav>
   <p>&copy; {year} {siteConfig.name}</p>
 </footer>
@@ -30,5 +33,14 @@ const year = new Date().getFullYear();
   }
   .site-footer a {
     color: #555;
+  }
+  .link-button {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: #555;
+    text-decoration: underline;
+    cursor: pointer;
   }
 </style>
