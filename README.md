@@ -12,8 +12,9 @@
 | `npm run build` | build เป็น production ที่ `./dist/` |
 | `npm run test` | รัน unit test ด้วย vitest |
 | `npm run lint` | ตรวจ type/template ด้วย `astro check` |
+| `npm run check-links` | build แล้วตรวจว่าไม่มีลิงก์ภายในเสีย |
 
-ก่อนเปิด PR ต้องรัน `npm run build`, `npm run test`, `npm run lint` ให้ผ่านทั้งหมด
+ก่อนเปิด PR ต้องรัน `npm run build`, `npm run test`, `npm run lint`, `npm run check-links` ให้ผ่านทั้งหมด
 
 ## โครงสร้างที่เกี่ยวข้อง
 

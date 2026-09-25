@@ -11,7 +11,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest run",
-    "lint": "astro check"
+    "lint": "astro check",
+    "check-links": "astro build && node scripts/check-internal-links.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

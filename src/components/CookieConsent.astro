@@ -93,8 +93,16 @@ const { gaMeasurementId = '', adsensePublisherId = '' } = Astro.props;
     } catch {
       /* ไม่บันทึกได้ก็ปิด banner อย่างเดียว */
     }
+    // ถ้าก่อนหน้านี้เคยยอมรับแล้วเปลี่ยนใจ ให้หยุดส่ง event ทันทีในเซสชันนี้
+    // (สคริปต์ที่โหลดไปแล้วจะหายไปเต็มที่ต่อเมื่อโหลดหน้าใหม่)
+    window.gtag = undefined;
     if (banner) banner.hidden = true;
   });
+
+  // เปิดจากลิงก์ "ตั้งค่าคุกกี้" ใน Footer เพื่อเปลี่ยนใจได้ทุกเมื่อ ไม่ใช่แค่ตอนเข้าเว็บครั้งแรก
+  window.openCookieSettings = function openCookieSettings() {
+    if (banner) banner.hidden = false;
+  };
 </script>
 
 <style>
